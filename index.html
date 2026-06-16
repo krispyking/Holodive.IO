@@ -109,17 +109,18 @@
       position: relative; display: flex; align-items: center; justify-content: center;
     }
     .hero-carousel {
-      position: relative; width: 100%; max-width: 480px;
+      position: relative; width: 460px; max-width: 100%;
+      aspect-ratio: 1 / 1;
       border-radius: 24px; overflow: hidden;
       box-shadow: 0 0 60px rgba(0,102,255,0.3), 0 0 120px rgba(0,212,255,0.1);
     }
     .hero-carousel img {
-      width: 100%; display: block;
-      position: absolute; top: 0; left: 0;
+      position: absolute; inset: 0;
+      width: 100%; height: 100%; object-fit: cover;
       opacity: 0; transition: opacity 1s ease-in-out;
       border-radius: 24px;
     }
-    .hero-carousel img.active { opacity: 1; position: relative; }
+    .hero-carousel img.active { opacity: 1; }
     .carousel-dots {
       display: flex; gap: 8px; justify-content: center; margin-top: 16px;
     }
@@ -855,7 +856,6 @@
     function goToSlide(n) {
       document.querySelectorAll('.hero-carousel img').forEach((img, i) => {
         img.classList.toggle('active', i === n);
-        img.style.position = i === n ? 'relative' : 'absolute';
       });
       document.querySelectorAll('.carousel-dot').forEach((dot, i) => {
         dot.classList.toggle('active', i === n);
