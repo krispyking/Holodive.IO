@@ -740,14 +740,24 @@
       btn.textContent = 'Joining...';
       btn.disabled = true;
 
+      const payload = {
+        name:       document.getElementById('name').value,
+        email:      document.getElementById('email').value,
+        diver_type: document.getElementById('diver-type').value,
+        excitement: document.getElementById('excitement').value
+      };
+
       if (typeof gtag === 'function') {
-        gtag('event', 'waitlist_signup', {
-          diver_type: document.getElementById('diver-type').value
-        });
+        gtag('event', 'waitlist_signup', { diver_type: payload.diver_type });
       }
 
-      // TODO: replace with real form endpoint (Google Sheets / Typeform)
-      await new Promise(r => setTimeout(r, 1000));
+      try {
+        await fetch('/api/signup', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+      } catch (_) {}
 
       this.style.display = 'none';
       document.getElementById('form-success').style.display = 'block';
