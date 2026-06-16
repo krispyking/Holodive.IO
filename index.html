@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HoloDive — See the Ocean Like Never Before</title>
+  <meta name="description" content="AI-powered underwater goggles that identify marine life, log your dives, and transform every dive from curiosity into understanding.">
+
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-DR30X4LZ3F"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-DR30X4LZ3F');
+  </script>
+
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --primary:    #0066FF;
+      --secondary:  #00D4FF;
+      --dark-bg:    #0A0E27;
+      --text-light: #FFFFFF;
+      --text-muted: #A0A8C0;
+      --accent:     #FF6B35;
+      --light-bg:   #F8F9FC;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      font-size: 16px;
+      line-height: 1.5;
+      color: var(--text-light);
+      background: var(--dark-bg);
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 60px;
+    }
+
+    @media (max-width: 768px) { .container { padding: 0 20px; } }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      background: rgba(10, 14, 39, 0.95);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      padding: 16px 0;
+    }
+    nav .container { display: flex; justify-content: space-between; align-items: center; }
+
+    .nav-logo {
+      font-size: 22px; font-weight: 700;
+      color: var(--text-light); text-decoration: none; letter-spacing: -0.5px;
+    }
+    .nav-logo span { color: var(--secondary); }
+
+    .nav-cta {
+      background: var(--primary); color: var(--text-light);
+      padding: 10px 24px; border-radius: 8px;
+      text-decoration: none; font-weight: 600; font-size: 14px;
+      transition: all 0.2s;
+    }
+    .nav-cta:hover {
+      background: #0052cc; transform: translateY(-1px);
+      box-shadow: 0 4px 16px rgba(0,102,255,0.4);
+    }
+
+    /* ── HERO ── */
+    #hero {
+      min-height: 100vh;
+      display: flex; align-items: center;
+      background: linear-gradient(135deg, #0A0E27 0%, #1a1f3a 50%, #0A0E27 100%);
+      position: relative; overflow: hidden; padding-top: 80px;
+    }
+    #hero::before {
+      content: ''; position: absolute;
+      top: 20%; left: 10%; width: 500px; height: 500px;
+      background: radial-gradient(circle, rgba(0,102,255,0.15) 0%, transparent 70%);
+      border-radius: 50%;
+    }
+    #hero::after {
+      content: ''; position: absolute;
+      bottom: 20%; right: 10%; width: 400px; height: 400px;
+      background: radial-gradient(circle, rgba(0,212,255,0.1) 0%, transparent 70%);
+      border-radius: 50%;
+    }
+
+    .hero-content {
+      position: relative; z-index: 1;
+      text-align: center; max-width: 800px; margin: 0 auto;
+    }
+    .hero-badge {
+      display: inline-block;
+      background: rgba(0,212,255,0.1); border: 1px solid rgba(0,212,255,0.3);
+      color: var(--secondary); padding: 6px 16px; border-radius: 20px;
+      font-size: 13px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase;
+      margin-bottom: 24px;
+    }
+    .hero-title {
+      font-size: 64px; font-weight: 700; line-height: 1.1;
+      letter-spacing: -2px; margin-bottom: 24px;
+    }
+    .hero-title span {
+      background: linear-gradient(135deg, #0066FF, #00D4FF);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    }
+    .hero-subtitle {
+      font-size: 20px; color: var(--text-muted); line-height: 1.6;
+      margin-bottom: 40px; max-width: 600px; margin-left: auto; margin-right: auto;
+    }
+    .hero-ctas {
+      display: flex; gap: 16px; justify-content: center;
+      flex-wrap: wrap; margin-bottom: 60px;
+    }
+    .hero-stats {
+      display: flex; gap: 48px; justify-content: center; flex-wrap: wrap;
+    }
+    .hero-stat-number { font-size: 32px; font-weight: 700; color: var(--secondary); }
+    .hero-stat-label  { font-size: 12px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; }
+
+    @media (max-width: 768px) {
+      .hero-title { font-size: 38px; letter-spacing: -1px; }
+      .hero-subtitle { font-size: 17px; }
+    }
+
+    /* ── BUTTONS ── */
+    .btn-primary {
+      background: var(--primary); color: var(--text-light);
+      padding: 16px 36px; border-radius: 10px;
+      text-decoration: none; font-weight: 700; font-size: 16px;
+      transition: all 0.2s; display: inline-block;
+    }
+    .btn-primary:hover {
+      background: #0052cc; transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(0,102,255,0.4);
+    }
+    .btn-ghost {
+      background: transparent; color: var(--secondary);
+      padding: 16px 36px; border-radius: 10px;
+      text-decoration: none; font-weight: 700; font-size: 16px;
+      border: 2px solid var(--secondary); transition: all 0.2s; display: inline-block;
+    }
+    .btn-ghost:hover { background: rgba(0,212,255,0.1); transform: translateY(-2px); }
+
+    /* ── GENERIC SECTION ── */
+    section { padding: 100px 0; }
+
+    .section-label {
+      font-size: 13px; font-weight: 600; letter-spacing: 2px;
+      text-transform: uppercase; color: var(--secondary); margin-bottom: 16px;
+    }
+    .section-title {
+      font-size: 42px; font-weight: 700; line-height: 1.15;
+      letter-spacing: -1px; margin-bottom: 20px;
+    }
+    .section-subtitle {
+      font-size: 18px; line-height: 1.6; color: var(--text-muted); max-width: 600px;
+    }
+
+    @media (max-width: 768px) {
+      section { padding: 60px 0; }
+      .section-title { font-size: 28px; }
+    }
+
+    /* ── PROBLEM / SOLUTION ── */
+    #problem { background: var(--light-bg); color: #0A0E27; }
+    #problem .section-label { color: var(--primary); }
+    #problem .section-title { color: #0A0E27; }
+    #problem .section-subtitle { color: #4a5568; }
+
+    .problem-grid {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 40px; margin-top: 60px;
+    }
+    .problem-card {
+      background: #fff; border-radius: 16px; padding: 40px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+    }
+    .problem-card .card-icon { font-size: 40px; margin-bottom: 20px; }
+    .problem-card h3 { font-size: 22px; font-weight: 700; color: #0A0E27; margin-bottom: 12px; }
+    .problem-card p  { color: #4a5568; line-height: 1.7; }
+
+    .solution-card {
+      background: linear-gradient(135deg, #0066FF, #0052cc);
+      border-radius: 16px; padding: 40px; color: #fff;
+    }
+    .solution-card h3 { font-size: 22px; font-weight: 700; margin-bottom: 12px; }
+    .solution-card p  { opacity: 0.9; line-height: 1.7; }
+
+    @media (max-width: 768px) { .problem-grid { grid-template-columns: 1fr; } }
+
+    /* ── FEATURES ── */
+    #features { background: var(--dark-bg); }
+
+    .features-grid {
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; margin-top: 60px;
+    }
+    .feature-card {
+      background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 16px; padding: 32px 24px; transition: all 0.3s;
+    }
+    .feature-card:hover {
+      background: rgba(0,102,255,0.08); border-color: rgba(0,102,255,0.3);
+      transform: translateY(-4px);
+    }
+    .feature-icon {
+      width: 48px; height: 48px;
+      background: rgba(0,102,255,0.15); border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 22px; margin-bottom: 20px;
+    }
+    .feature-card h3 { font-size: 17px; font-weight: 700; margin-bottom: 10px; }
+    .feature-card p  { font-size: 14px; color: var(--text-muted); line-height: 1.6; }
+
+    @media (max-width: 1024px) { .features-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 600px)  { .features-grid { grid-template-columns: 1fr; } }
+
+    /* ── USE CASES ── */
+    #use-cases { background: #0d1230; }
+
+    .use-cases-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-top: 60px;
+    }
+    .use-case-card {
+      background: rgba(255,255,255,0.03); border: 1px solid rgba(0,212,255,0.15);
+      border-radius: 20px; padding: 40px 32px; transition: all 0.3s;
+      position: relative; overflow: hidden;
+    }
+    .use-case-card::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+      background: linear-gradient(90deg, var(--primary), var(--secondary));
+      opacity: 0; transition: opacity 0.3s;
+    }
+    .use-case-card:hover::before { opacity: 1; }
+    .use-case-card:hover {
+      background: rgba(0,102,255,0.06); border-color: rgba(0,212,255,0.3);
+      transform: translateY(-6px);
+    }
+    .use-case-icon { font-size: 40px; margin-bottom: 24px; }
+    .use-case-card h3 { font-size: 22px; font-weight: 700; margin-bottom: 16px; }
+    .use-case-card p  { color: var(--text-muted); line-height: 1.7; font-size: 15px; }
+
+    @media (max-width: 900px) { .use-cases-grid { grid-template-columns: 1fr; } }
+
+    /* ── SOCIAL PROOF ── */
+    #social-proof { background: var(--light-bg); color: #0A0E27; text-align: center; }
+    #social-proof .section-label { color: var(--primary); }
+    #social-proof .section-title { color: #0A0E27; }
+
+    .proof-tagline { font-size: 20px; color: #4a5568; margin-bottom: 36px; }
+
+    .proof-counter {
+      display: inline-flex; align-items: center; gap: 12px;
+      background: #fff; border: 2px solid var(--primary);
+      border-radius: 100px; padding: 12px 28px;
+      font-size: 16px; font-weight: 700; color: #0A0E27;
+      margin-bottom: 60px;
+    }
+    .proof-counter .dot {
+      width: 10px; height: 10px; background: var(--accent);
+      border-radius: 50%; animation: pulse 2s infinite;
+    }
+    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+
+    .proof-stats { display: flex; justify-content: center; gap: 60px; flex-wrap: wrap; }
+    .proof-stat-number { font-size: 40px; font-weight: 700; color: var(--primary); }
+    .proof-stat-label  { font-size: 14px; color: #4a5568; margin-top: 4px; }
+
+    /* ── PRICING ── */
+    #pricing { background: var(--dark-bg); text-align: center; }
+
+    .pricing-note {
+      display: inline-block;
+      background: rgba(255,107,53,0.1); border: 1px solid rgba(255,107,53,0.3);
+      color: var(--accent); padding: 6px 16px; border-radius: 20px;
+      font-size: 13px; font-weight: 600; margin-bottom: 48px;
+    }
+    .pricing-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 24px;
+      max-width: 800px; margin: 0 auto 40px;
+    }
+    .pricing-card {
+      background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 20px; padding: 40px 32px; text-align: left;
+    }
+    .pricing-card.featured {
+      background: rgba(0,102,255,0.1); border-color: var(--primary); position: relative;
+    }
+    .featured-badge {
+      position: absolute; top: -12px; left: 50%; transform: translateX(-50%);
+      background: var(--primary); color: #fff;
+      padding: 4px 16px; border-radius: 20px; font-size: 12px; font-weight: 700; white-space: nowrap;
+    }
+    .plan-name { font-size: 13px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; color: var(--secondary); margin-bottom: 12px; }
+    .plan-price {
+      font-size: 52px; font-weight: 700; line-height: 1;
+    }
+    .plan-price sup { font-size: 24px; vertical-align: super; }
+    .plan-price-note { font-size: 14px; color: var(--text-muted); margin: 8px 0 24px; }
+    .plan-price-note del { opacity: 0.6; }
+    .plan-divider { border: none; border-top: 1px solid rgba(255,255,255,0.08); margin: 24px 0; }
+    .plan-feature { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 12px; font-size: 14px; color: var(--text-muted); }
+    .plan-feature .check { color: var(--secondary); font-weight: 700; flex-shrink: 0; }
+    .pricing-anchor { font-size: 14px; color: var(--text-muted); }
+    .pricing-anchor strong { color: var(--text-light); }
+
+    @media (max-width: 600px) { .pricing-grid { grid-template-columns: 1fr; } }
+
+    /* ── SIGNUP ── */
+    #signup {
+      background: linear-gradient(135deg, #0044cc 0%, #0066FF 50%, #0088ff 100%);
+      text-align: center;
+    }
+    #signup .section-label { color: rgba(255,255,255,0.7); }
+    #signup .section-title { color: #fff; }
+    #signup .section-subtitle { color: rgba(255,255,255,0.8); margin: 0 auto 48px; }
+
+    .signup-form {
+      max-width: 520px; margin: 0 auto;
+      background: rgba(255,255,255,0.1); backdrop-filter: blur(10px);
+      border: 1px solid rgba(255,255,255,0.2); border-radius: 20px; padding: 40px;
+    }
+    .form-group { margin-bottom: 20px; text-align: left; }
+    .form-group label {
+      display: block; font-size: 13px; font-weight: 600;
+      color: rgba(255,255,255,0.8); margin-bottom: 8px;
+    }
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      width: 100%; padding: 14px 16px; border-radius: 10px;
+      border: 1px solid rgba(255,255,255,0.2);
+      background: rgba(255,255,255,0.1); color: #fff;
+      font-size: 15px; font-family: 'Inter', sans-serif;
+      transition: all 0.2s; outline: none;
+    }
+    .form-group input::placeholder,
+    .form-group select::placeholder,
+    .form-group textarea::placeholder { color: rgba(255,255,255,0.4); }
+    .form-group select option { background: #0A0E27; color: #fff; }
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+      border-color: rgba(255,255,255,0.6); background: rgba(255,255,255,0.15);
+      box-shadow: 0 0 0 3px rgba(0,212,255,0.3);
+    }
+    .form-group textarea { resize: none; height: 80px; }
+
+    .form-submit {
+      width: 100%; padding: 16px; background: #fff; color: var(--primary);
+      border: none; border-radius: 10px; font-size: 16px; font-weight: 700;
+      cursor: pointer; transition: all 0.2s; margin-top: 8px;
+      font-family: 'Inter', sans-serif;
+    }
+    .form-submit:hover {
+      background: var(--dark-bg); color: var(--secondary);
+      transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+    }
+    .form-submit:disabled { opacity: 0.7; cursor: not-allowed; transform: none; }
+
+    .form-success {
+      display: none; padding: 20px;
+      background: rgba(0,212,255,0.15); border: 1px solid rgba(0,212,255,0.3);
+      border-radius: 12px; color: #fff; font-weight: 600; margin-top: 16px;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      background: #050810; padding: 60px 0 30px;
+      border-top: 1px solid rgba(255,255,255,0.06);
+    }
+    .footer-grid {
+      display: grid; grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 40px; margin-bottom: 48px;
+    }
+    .footer-logo { font-size: 22px; font-weight: 700; color: #fff; margin-bottom: 12px; }
+    .footer-logo span { color: var(--secondary); }
+    .footer-brand p { color: var(--text-muted); font-size: 14px; line-height: 1.6; max-width: 240px; }
+
+    .footer-col h4 {
+      font-size: 13px; font-weight: 600; letter-spacing: 1px;
+      text-transform: uppercase; color: var(--text-light); margin-bottom: 20px;
+    }
+    .footer-col ul { list-style: none; }
+    .footer-col ul li { margin-bottom: 10px; }
+    .footer-col ul li a { color: var(--text-muted); text-decoration: none; font-size: 14px; transition: color 0.2s; }
+    .footer-col ul li a:hover { color: var(--secondary); }
+
+    .footer-bottom {
+      border-top: 1px solid rgba(255,255,255,0.06); padding-top: 24px;
+      display: flex; justify-content: space-between; align-items: center;
+      flex-wrap: wrap; gap: 12px;
+    }
+    .footer-bottom p { color: var(--text-muted); font-size: 13px; }
+
+    .social-links { display: flex; gap: 16px; }
+    .social-links a { color: var(--text-muted); text-decoration: none; font-size: 13px; font-weight: 600; transition: color 0.2s; }
+    .social-links a:hover { color: var(--secondary); }
+
+    @media (max-width: 900px) { .footer-grid { grid-template-columns: 1fr 1fr; } }
+    @media (max-width: 600px) { .footer-grid { grid-template-columns: 1fr; } }
+
+    /* ── ANIMATIONS ── */
+    .fade-in {
+      opacity: 0; transform: translateY(20px);
+      transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+    }
+    .fade-in.visible { opacity: 1; transform: translateY(0); }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <div class="container">
+      <a href="#" class="nav-logo">Holo<span>Dive</span></a>
+      <a href="#signup" class="nav-cta"
+         onclick="gtag('event','cta_click',{cta_location:'nav'})">Secure Your Spot</a>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section id="hero">
+    <div class="container">
+      <div class="hero-content">
+        <div class="hero-badge">🤿 Early Access Open</div>
+        <h1 class="hero-title">
+          See the Ocean<br><span>Like Never Before</span>
+        </h1>
+        <p class="hero-subtitle">
+          AI-powered underwater goggles that identify marine life, log your dives, and transform every dive from curiosity into understanding.
+        </p>
+        <div class="hero-ctas">
+          <a href="#signup" class="btn-primary"
+             onclick="gtag('event','cta_click',{cta_location:'hero',variant:'A'})">
+            Secure Your Spot — $399
+          </a>
+          <a href="#features" class="btn-ghost">See How It Works</a>
+        </div>
+        <div class="hero-stats">
+          <div>
+            <div class="hero-stat-number">6M+</div>
+            <div class="hero-stat-label">Active Divers</div>
+          </div>
+          <div>
+            <div class="hero-stat-number">$699</div>
+            <div class="hero-stat-label">Closest Competitor</div>
+          </div>
+          <div>
+            <div class="hero-stat-number">$399</div>
+            <div class="hero-stat-label">Early Access Price</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROBLEM / SOLUTION -->
+  <section id="problem">
+    <div class="container">
+      <div class="section-label">The Problem We Solve</div>
+      <h2 class="section-title">Most Divers Never Know<br>What They're Looking At</h2>
+      <p class="section-subtitle">The ocean is full of life — but without context, every dive is a missed opportunity for learning and connection.</p>
+      <div class="problem-grid fade-in">
+        <div class="problem-card">
+          <div class="card-icon">🤔</div>
+          <h3>The Problem</h3>
+          <p>Most divers encounter hundreds of species on every dive but can't identify them. Manual logging is slow and error-prone. Wrist computers give data, but no context. The ocean stays a mystery.</p>
+        </div>
+        <div class="solution-card">
+          <div class="card-icon" style="font-size:40px;margin-bottom:20px;">✨</div>
+          <h3>The Solution</h3>
+          <p>HoloDive overlays real-time species identification, behavior insights, and conservation data directly into your field of view. Every dive becomes informed, memorable, and meaningful.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURES -->
+  <section id="features">
+    <div class="container">
+      <div class="section-label">What HoloDive Does</div>
+      <h2 class="section-title">Your Dive Computer, Marine Biologist,<br>and Safety Buddy — Built Into Your Mask</h2>
+      <div class="features-grid">
+        <div class="feature-card fade-in">
+          <div class="feature-icon">🐠</div>
+          <h3>Real-Time Species ID</h3>
+          <p>AI identifies fish, coral, and sea life as you swim past — species name, behavior facts, and conservation status overlaid in your HUD.</p>
+        </div>
+        <div class="feature-card fade-in">
+          <div class="feature-icon">📊</div>
+          <h3>Automated Dive Log</h3>
+          <p>Complete dive record generated automatically: species list, conditions, depth, duration, route, and annotated video. No slate required.</p>
+        </div>
+        <div class="feature-card fade-in">
+          <div class="feature-icon">🛡️</div>
+          <h3>Safety Buddy</h3>
+          <p>Real-time depth, air time, no-deco limits, and buddy alerts in your field of vision — so you never need to break eye contact with the reef.</p>
+        </div>
+        <div class="feature-card fade-in">
+          <div class="feature-icon">🌍</div>
+          <h3>Citizen Science</h3>
+          <p>Opt-in data contribution to global marine research databases. Your dives help track species populations and reef health worldwide.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- USE CASES -->
+  <section id="use-cases">
+    <div class="container">
+      <div class="section-label">Who It's Built For</div>
+      <h2 class="section-title">Built for Every Diver</h2>
+      <p class="section-subtitle">Whether you dive for joy, science, or conservation — HoloDive makes every dive more meaningful.</p>
+      <div class="use-cases-grid">
+        <div class="use-case-card fade-in">
+          <div class="use-case-icon">🏝️</div>
+          <h3>Recreational Diving</h3>
+          <p>Explore reefs with instant species identification, behavior facts, and photography tips for every encounter. Never wonder what you're looking at again.</p>
+        </div>
+        <div class="use-case-card fade-in">
+          <div class="use-case-icon">🔬</div>
+          <h3>Marine Research</h3>
+          <p>Collect visual data, behavioral observations, and geo-tagged references in real-time. Accelerate research workflows without leaving the water.</p>
+        </div>
+        <div class="use-case-card fade-in">
+          <div class="use-case-icon">🌊</div>
+          <h3>Ocean Conservation</h3>
+          <p>Document reef health, track species populations, and contribute to global conservation efforts — automatically, on every dive.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SOCIAL PROOF -->
+  <section id="social-proof">
+    <div class="container">
+      <div class="section-label">Early Community</div>
+      <h2 class="section-title">Divers Are Already On Board</h2>
+      <p class="proof-tagline">Early adopters are signing up. Don't miss your spot at early-access pricing.</p>
+      <div>
+        <div class="proof-counter">
+          <div class="dot"></div>
+          Waitlist is open — limited early spots
+        </div>
+      </div>
+      <div class="proof-stats fade-in">
+        <div class="proof-stat">
+          <div class="proof-stat-number">6M+</div>
+          <div class="proof-stat-label">Active Divers Globally</div>
+        </div>
+        <div class="proof-stat">
+          <div class="proof-stat-number">$860M</div>
+          <div class="proof-stat-label">Scuba Equipment Market</div>
+        </div>
+        <div class="proof-stat">
+          <div class="proof-stat-number">0</div>
+          <div class="proof-stat-label">Real AI Dive Masks Shipped</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRICING -->
+  <section id="pricing">
+    <div class="container">
+      <div class="section-label">Pricing</div>
+      <h2 class="section-title">Early Adopter Pricing</h2>
+      <p class="section-subtitle" style="margin: 0 auto 32px;">
+        The closest alternative — Daïve HUD — starts at $699 with no AI, no species ID. HoloDive gives you more, for less.
+      </p>
+      <div class="pricing-note">⏱ Limited spots at launch pricing</div>
+      <div class="pricing-grid">
+        <div class="pricing-card">
+          <div class="plan-name">Base</div>
+          <div class="plan-price"><sup>$</sup>399</div>
+          <div class="plan-price-note">Standard price: <del>$499</del></div>
+          <hr class="plan-divider">
+          <div class="plan-feature"><span class="check">✓</span> Real-time species ID HUD</div>
+          <div class="plan-feature"><span class="check">✓</span> Automated dive logging</div>
+          <div class="plan-feature"><span class="check">✓</span> Safety metrics overlay</div>
+          <div class="plan-feature"><span class="check">✓</span> Post-dive annotated video</div>
+          <div class="plan-feature"><span class="check">✓</span> Mobile app (iOS + Android)</div>
+          <br>
+          <a href="#signup" class="btn-primary"
+             style="display:block;text-align:center;font-size:14px;padding:12px 24px;"
+             onclick="gtag('event','cta_click',{cta_location:'pricing_base',variant:'A'})">
+            Secure Your Spot
+          </a>
+        </div>
+        <div class="pricing-card featured">
+          <div class="featured-badge">Most Popular</div>
+          <div class="plan-name">Pro</div>
+          <div class="plan-price"><sup>$</sup>499</div>
+          <div class="plan-price-note">Standard price: <del>$599</del></div>
+          <hr class="plan-divider">
+          <div class="plan-feature"><span class="check">✓</span> Everything in Base</div>
+          <div class="plan-feature"><span class="check">✓</span> 500K+ species database</div>
+          <div class="plan-feature"><span class="check">✓</span> Citizen science data upload</div>
+          <div class="plan-feature"><span class="check">✓</span> Dive operator dashboard</div>
+          <div class="plan-feature"><span class="check">✓</span> Priority support</div>
+          <br>
+          <a href="#signup" class="btn-primary"
+             style="display:block;text-align:center;font-size:14px;padding:12px 24px;"
+             onclick="gtag('event','cta_click',{cta_location:'pricing_pro',variant:'A'})">
+            Secure Your Spot
+          </a>
+        </div>
+      </div>
+      <p class="pricing-anchor">
+        Compare: <strong>Daïve HUD — $699 — no AI, no species ID.</strong>
+      </p>
+    </div>
+  </section>
+
+  <!-- SIGNUP -->
+  <section id="signup">
+    <div class="container">
+      <div class="section-label">Join the Waitlist</div>
+      <h2 class="section-title">Secure Your Early Access</h2>
+      <p class="section-subtitle">
+        Be first in line for the world's first AI dive mask. Early adopter pricing — limited spots.
+      </p>
+      <div class="signup-form">
+        <form id="waitlist-form">
+          <div class="form-group">
+            <label for="name">Full Name</label>
+            <input type="text" id="name" name="name" placeholder="Your name" required>
+          </div>
+          <div class="form-group">
+            <label for="email">Email Address</label>
+            <input type="email" id="email" name="email" placeholder="you@example.com" required>
+          </div>
+          <div class="form-group">
+            <label for="diver-type">I Am A...</label>
+            <select id="diver-type" name="diver_type" required>
+              <option value="" disabled selected>Select diver type</option>
+              <option value="recreational">Recreational Diver</option>
+              <option value="professional">Professional Diver / Instructor</option>
+              <option value="research">Marine Researcher</option>
+              <option value="conservation">Conservation Worker</option>
+              <option value="operator">Dive Operator</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="excitement">What excites you most about HoloDive?</label>
+            <textarea id="excitement" name="excitement"
+              placeholder="Species ID, dive logging, safety features..."></textarea>
+          </div>
+          <button type="submit" class="form-submit" id="submit-btn">
+            Secure Your Spot →
+          </button>
+        </form>
+        <div class="form-success" id="form-success">
+          ✓ You're on the list! We'll be in touch with early access details.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <div class="footer-logo">Holo<span>Dive</span></div>
+          <p>Exploring oceans through AI. The world's first real-time AI dive mask.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Product</h4>
+          <ul>
+            <li><a href="#features">Features</a></li>
+            <li><a href="#use-cases">Use Cases</a></li>
+            <li><a href="#pricing">Pricing</a></li>
+            <li><a href="#signup">Early Access</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Company</h4>
+          <ul>
+            <li><a href="#">About</a></li>
+            <li><a href="#">Blog</a></li>
+            <li><a href="#">Contact</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Legal</h4>
+          <ul>
+            <li><a href="#">Privacy Policy</a></li>
+            <li><a href="#">Terms of Service</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>© 2026 HoloDive. All rights reserved.</p>
+        <div class="social-links">
+          <a href="#">LinkedIn</a>
+          <a href="#">YouTube</a>
+          <a href="#">Instagram</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Scroll-triggered fade-in
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+    }, { threshold: 0.12 });
+    document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+    // GA4 nav CTA tracking (covers all #signup anchors not inline-tagged)
+    document.querySelectorAll('a[href="#signup"]:not([onclick])').forEach(el => {
+      el.addEventListener('click', function() {
+        if (typeof gtag === 'function') {
+          gtag('event', 'cta_click', {
+            cta_location: this.closest('section')?.id || 'unknown',
+            variant: 'A'
+          });
+        }
+      });
+    });
+
+    // Form submission
+    document.getElementById('waitlist-form').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      const btn = document.getElementById('submit-btn');
+      btn.textContent = 'Joining...';
+      btn.disabled = true;
+
+      if (typeof gtag === 'function') {
+        gtag('event', 'waitlist_signup', {
+          diver_type: document.getElementById('diver-type').value
+        });
+      }
+
+      // TODO: replace with real form endpoint (Google Sheets / Typeform)
+      await new Promise(r => setTimeout(r, 1000));
+
+      this.style.display = 'none';
+      document.getElementById('form-success').style.display = 'block';
+    });
+  </script>
+
+</body>
+</html>
