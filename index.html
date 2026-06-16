@@ -97,9 +97,45 @@
       border-radius: 50%;
     }
 
-    .hero-content {
+    .hero-inner {
       position: relative; z-index: 1;
-      text-align: center; max-width: 800px; margin: 0 auto;
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 60px; align-items: center;
+    }
+    .hero-content {
+      text-align: left;
+    }
+    .hero-visual {
+      position: relative; display: flex; align-items: center; justify-content: center;
+    }
+    .hero-carousel {
+      position: relative; width: 100%; max-width: 480px;
+      border-radius: 24px; overflow: hidden;
+      box-shadow: 0 0 60px rgba(0,102,255,0.3), 0 0 120px rgba(0,212,255,0.1);
+    }
+    .hero-carousel img {
+      width: 100%; display: block;
+      position: absolute; top: 0; left: 0;
+      opacity: 0; transition: opacity 1s ease-in-out;
+      border-radius: 24px;
+    }
+    .hero-carousel img.active { opacity: 1; position: relative; }
+    .carousel-dots {
+      display: flex; gap: 8px; justify-content: center; margin-top: 16px;
+    }
+    .carousel-dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: rgba(255,255,255,0.3); cursor: pointer;
+      transition: background 0.3s, transform 0.3s;
+    }
+    .carousel-dot.active { background: var(--secondary); transform: scale(1.3); }
+    @media (max-width: 900px) {
+      .hero-inner { grid-template-columns: 1fr; gap: 40px; }
+      .hero-content { text-align: center; }
+      .hero-ctas { justify-content: center; }
+      .hero-stats { justify-content: center; }
+      .hero-visual { order: -1; }
+      .hero-carousel { max-width: 340px; margin: 0 auto; }
     }
     .hero-badge {
       display: inline-block;
@@ -118,14 +154,13 @@
     }
     .hero-subtitle {
       font-size: 20px; color: var(--text-muted); line-height: 1.6;
-      margin-bottom: 40px; max-width: 600px; margin-left: auto; margin-right: auto;
+      margin-bottom: 40px; max-width: 520px;
     }
     .hero-ctas {
-      display: flex; gap: 16px; justify-content: center;
-      flex-wrap: wrap; margin-bottom: 60px;
+      display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 60px;
     }
     .hero-stats {
-      display: flex; gap: 48px; justify-content: center; flex-wrap: wrap;
+      display: flex; gap: 48px; flex-wrap: wrap;
     }
     .hero-stat-number { font-size: 32px; font-weight: 700; color: var(--secondary); }
     .hero-stat-label  { font-size: 12px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; }
@@ -279,6 +314,51 @@
     .proof-stat-label  { font-size: 14px; color: #4a5568; margin-top: 4px; }
 
     /* ── PRICING ── */
+    /* ── COMMUNITY ── */
+    #community {
+      position: relative; overflow: hidden; padding: 0;
+      color: #fff; text-align: center;
+    }
+    .community-banner {
+      position: relative; min-height: 420px;
+      background: linear-gradient(135deg, #071428 0%, #0d2040 100%);
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      padding: 80px 20px;
+    }
+    .community-banner-img {
+      position: absolute; inset: 0; width: 100%; height: 100%;
+      object-fit: cover; object-position: center top;
+      opacity: 0.55;
+    }
+    .community-overlay { position: relative; z-index: 1; }
+    .community-overlay .section-label { color: var(--secondary); }
+    .community-overlay .section-title { color: #fff; font-size: 48px; margin-bottom: 16px; }
+    .community-overlay p { color: rgba(255,255,255,0.8); font-size: 18px; margin-bottom: 36px; }
+    .social-links-row { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+    .social-btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 12px 24px; border-radius: 8px; font-weight: 600; font-size: 14px;
+      text-decoration: none; transition: transform 0.2s, opacity 0.2s;
+    }
+    .social-btn:hover { transform: translateY(-2px); opacity: 0.9; }
+    .social-btn.fb  { background: #1877F2; color: #fff; }
+    .social-btn.ig  { background: linear-gradient(45deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888); color: #fff; }
+    .social-btn.yt  { background: #FF0000; color: #fff; }
+    .community-mockup {
+      background: #0a0e1a; padding: 60px 0 80px;
+    }
+    .mockup-frame {
+      max-width: 900px; margin: 0 auto; border-radius: 16px; overflow: hidden;
+      box-shadow: 0 24px 80px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.06);
+    }
+    .mockup-frame img { width: 100%; display: block; }
+    .mockup-caption {
+      margin-top: 20px; font-size: 14px; color: var(--text-muted);
+    }
+    @media (max-width: 768px) {
+      .community-overlay .section-title { font-size: 32px; }
+    }
+
     #pricing { background: var(--dark-bg); text-align: center; }
 
     .pricing-note {
@@ -434,35 +514,55 @@
   <!-- HERO -->
   <section id="hero">
     <div class="container">
-      <div class="hero-content">
-        <div class="hero-badge">🤿 Early Access Open</div>
-        <h1 class="hero-title">
-          See the Ocean<br><span>Like Never Before</span>
-        </h1>
-        <p class="hero-subtitle">
-          AI-powered underwater goggles that identify marine life, log your dives, and transform every dive from curiosity into understanding.
-        </p>
-        <div class="hero-ctas">
-          <a href="#signup" class="btn-primary"
-             onclick="gtag('event','cta_click',{cta_location:'hero',variant:'A'})">
-            Secure Your Spot — $399
-          </a>
-          <a href="#features" class="btn-ghost">See How It Works</a>
+      <div class="hero-inner">
+        <div class="hero-content">
+          <div class="hero-badge">🤿 Early Access Open</div>
+          <h1 class="hero-title">
+            See the Ocean<br><span>Like Never Before</span>
+          </h1>
+          <p class="hero-subtitle">
+            AI-powered underwater goggles that identify marine life, log your dives, and transform every dive from curiosity into understanding.
+          </p>
+          <div class="hero-ctas">
+            <a href="#signup" class="btn-primary"
+               onclick="gtag('event','cta_click',{cta_location:'hero',variant:'A'})">
+              Secure Your Spot — $399
+            </a>
+            <a href="#features" class="btn-ghost">See How It Works</a>
+          </div>
+          <div class="hero-stats">
+            <div>
+              <div class="hero-stat-number">6M+</div>
+              <div class="hero-stat-label">Active Divers</div>
+            </div>
+            <div>
+              <div class="hero-stat-number">$699</div>
+              <div class="hero-stat-label">Closest Competitor</div>
+          </div>
+            </div>
+            <div>
+              <div class="hero-stat-number">$399</div>
+              <div class="hero-stat-label">Early Access Price</div>
+            </div>
+          </div>
         </div>
-        <div class="hero-stats">
+
+        <!-- IMAGE CAROUSEL -->
+        <div class="hero-visual">
           <div>
-            <div class="hero-stat-number">6M+</div>
-            <div class="hero-stat-label">Active Divers</div>
-          </div>
-          <div>
-            <div class="hero-stat-number">$699</div>
-            <div class="hero-stat-label">Closest Competitor</div>
-          </div>
-          <div>
-            <div class="hero-stat-number">$399</div>
-            <div class="hero-stat-label">Early Access Price</div>
+            <div class="hero-carousel" id="heroCarousel">
+              <img src="assets/hero-1.jpg" alt="HoloDive AI diving mask concept" class="active" id="slide-0">
+              <img src="assets/hero-2.jpg" alt="HoloDive mask with tech overlay" id="slide-1">
+              <img src="assets/hero-3.jpg" alt="HoloDive underwater AI experience" id="slide-2">
+            </div>
+            <div class="carousel-dots">
+              <div class="carousel-dot active" onclick="goToSlide(0)"></div>
+              <div class="carousel-dot" onclick="goToSlide(1)"></div>
+              <div class="carousel-dot" onclick="goToSlide(2)"></div>
+            </div>
           </div>
         </div>
+
       </div>
     </div>
   </section>
@@ -569,6 +669,40 @@
           <div class="proof-stat-number">0</div>
           <div class="proof-stat-label">Real AI Dive Masks Shipped</div>
         </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- COMMUNITY -->
+  <section id="community">
+    <div class="community-banner">
+      <img src="assets/social-cover.jpg" alt="HoloDive underwater world" class="community-banner-img">
+      <div class="community-overlay fade-in">
+        <div class="section-label">Community</div>
+        <h2 class="section-title">Dive Into the Conversation</h2>
+        <p>Follow along as we build the future of underwater exploration. Behind-the-scenes, launch updates, and ocean content daily.</p>
+        <div class="social-links-row">
+          <a href="#" class="social-btn fb">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+            Facebook
+          </a>
+          <a href="#" class="social-btn ig">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+            Instagram
+          </a>
+          <a href="#" class="social-btn yt">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M23.495 6.205a3.007 3.007 0 00-2.088-2.088c-1.87-.501-9.396-.501-9.396-.501s-7.507-.01-9.396.501A3.007 3.007 0 00.527 6.205a31.247 31.247 0 00-.522 5.805 31.247 31.247 0 00.522 5.783 3.007 3.007 0 002.088 2.088c1.868.502 9.396.502 9.396.502s7.506 0 9.396-.502a3.007 3.007 0 002.088-2.088 31.247 31.247 0 00.5-5.783 31.247 31.247 0 00-.5-5.805zM9.609 15.601V8.408l6.264 3.602z"/></svg>
+            YouTube
+          </a>
+        </div>
+      </div>
+    </div>
+    <div class="community-mockup">
+      <div class="container">
+        <div class="mockup-frame fade-in">
+          <img src="assets/social-page.jpg" alt="HoloDive Facebook page preview">
+        </div>
+        <p class="mockup-caption">HoloDive social channels launching alongside early access — follow to stay in the loop.</p>
       </div>
     </div>
   </section>
@@ -715,6 +849,21 @@
   </footer>
 
   <script>
+    // Hero image carousel
+    let currentSlide = 0;
+    const totalSlides = 3;
+    function goToSlide(n) {
+      document.querySelectorAll('.hero-carousel img').forEach((img, i) => {
+        img.classList.toggle('active', i === n);
+        img.style.position = i === n ? 'relative' : 'absolute';
+      });
+      document.querySelectorAll('.carousel-dot').forEach((dot, i) => {
+        dot.classList.toggle('active', i === n);
+      });
+      currentSlide = n;
+    }
+    setInterval(() => goToSlide((currentSlide + 1) % totalSlides), 3500);
+
     // Scroll-triggered fade-in
     const observer = new IntersectionObserver(entries => {
       entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
