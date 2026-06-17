@@ -5,7 +5,12 @@ export async function onRequestPost(context) {
 
   try {
     const data = await request.json();
-    const { name, email, diver_type, excitement } = data;
+    const { name, email, phone, diver_type, excitement } = data;
+
+    const timestamp = new Date().toISOString();
+    const ip        = request.headers.get('CF-Connecting-IP') || '—';
+    const country   = request.headers.get('CF-IPCountry')     || '—';
+    const vpn       = request.headers.get('CF-IPIs-Threat')   === 'true' ? 'Yes' : 'No';
 
     // Post to Slack as HoloDiveClaw
     const slackMsg = {
@@ -21,6 +26,7 @@ export async function onRequestPost(context) {
           fields: [
             { type: 'mrkdwn', text: `*Name:*\n${name || '—'}` },
             { type: 'mrkdwn', text: `*Email:*\n${email || '—'}` },
+            { type: 'mrkdwn', text: `*Phone:*\n${phone || '—'}` },
             { type: 'mrkdwn', text: `*Diver Type:*\n${diver_type || '—'}` }
           ]
         },
@@ -28,6 +34,15 @@ export async function onRequestPost(context) {
           type: 'section',
           text: { type: 'mrkdwn', text: `*What excites them:*\n_${excitement}_` }
         }] : []),
+        {
+          type: 'section',
+          fields: [
+            { type: 'mrkdwn', text: `*IP:*\n${ip}` },
+            { type: 'mrkdwn', text: `*Country:*\n${country}` },
+            { type: 'mrkdwn', text: `*VPN/Threat:*\n${vpn}` },
+            { type: 'mrkdwn', text: `*Time (UTC):*\n${timestamp}` }
+          ]
+        },
         {
           type: 'context',
           elements: [{ type: 'mrkdwn', text: `Signed up via holodive.io` }]
@@ -49,7 +64,7 @@ export async function onRequestPost(context) {
       await fetch(env.APPS_SCRIPT_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, email, diver_type, excitement })
+        body: JSON.stringify({ timestamp, name, email, phone, diver_type, excitement, ip, country, vpn })
       }).catch(() => {});
     }
 

@@ -794,6 +794,10 @@
             <input type="email" id="email" name="email" placeholder="you@example.com" required>
           </div>
           <div class="form-group">
+            <label for="phone">Phone Number</label>
+            <input type="tel" id="phone" name="phone" placeholder="+1 555 000 0000">
+          </div>
+          <div class="form-group">
             <label for="diver-type">I Am A...</label>
             <select id="diver-type" name="diver_type" required>
               <option value="" disabled selected>Select diver type</option>
@@ -907,6 +911,7 @@
       const payload = {
         name:       document.getElementById('name').value,
         email:      document.getElementById('email').value,
+        phone:      document.getElementById('phone').value,
         diver_type: document.getElementById('diver-type').value,
         excitement: document.getElementById('excitement').value
       };
