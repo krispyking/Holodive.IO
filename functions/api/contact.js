@@ -1,14 +1,14 @@
 const HOLODIVE_CHANNEL = 'C0ARM8R3JE5'; // #proj-holodive
 
-const DIVER_TYPE_LABELS = {
-  recreational: 'Recreational Diver',
-  professional:  'Professional / Instructor',
-  research:      'Marine Researcher',
-  conservation:  'Conservation Worker',
-  operator:      'Dive Operator',
+const SUBJECT_LABELS = {
+  'early-access':  'Early Access / Waitlist',
+  'partnership':   'Partnership Enquiry',
+  'press':         'Press / Media',
+  'research':      'Research Collaboration',
+  'other':         'Other',
 };
 
-async function pushToHubspot(env, { name, email, phone, diver_type, excitement, source }) {
+async function pushToHubspot(env, { name, email, subject, message }) {
   if (!env.HUBSPOT_TOKEN) return { skipped: true };
 
   const [firstname, ...rest] = (name || '').trim().split(' ');
@@ -17,11 +17,10 @@ async function pushToHubspot(env, { name, email, phone, diver_type, excitement, 
   const properties = {
     email,
     firstname,
-    ...(lastname    && { lastname }),
-    ...(phone       && { phone }),
-    ...(diver_type  && { jobtitle: DIVER_TYPE_LABELS[diver_type] || diver_type }),
-    ...(excitement  && { message: excitement }),
-    ...(source      && { hs_lead_status: 'NEW', lifecyclestage: 'lead' }),
+    ...(lastname  && { lastname }),
+    ...(message   && { message }),
+    hs_lead_status: 'NEW',
+    lifecyclestage: 'lead',
   };
 
   const res = await fetch('https://api.hubapi.com/crm/v3/objects/contacts', {
@@ -34,7 +33,7 @@ async function pushToHubspot(env, { name, email, phone, diver_type, excitement, 
   });
 
   if (res.status === 409) {
-    // Contact already exists — patch instead
+    // Contact exists — update message/notes only
     const existing = await fetch(
       `https://api.hubapi.com/crm/v3/objects/contacts/${encodeURIComponent(email)}?idProperty=email`,
       {
@@ -43,7 +42,7 @@ async function pushToHubspot(env, { name, email, phone, diver_type, excitement, 
           Authorization: `Bearer ${env.HUBSPOT_TOKEN}`,
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ properties }),
+        body: JSON.stringify({ properties: { message } }),
       }
     );
     return { patched: true, status: existing.status };
@@ -59,12 +58,13 @@ export async function onRequestPost(context) {
 
   try {
     const data = await request.json();
-    const { name, email, phone, diver_type, excitement } = data;
+    const { name, email, subject, message } = data;
 
     const timestamp = new Date().toISOString();
     const ip        = request.headers.get('CF-Connecting-IP') || '—';
     const country   = request.headers.get('CF-IPCountry')     || '—';
-    const vpn       = request.headers.get('CF-IPIs-Threat')   === 'true' ? 'Yes' : 'No';
+
+    const subjectLabel = SUBJECT_LABELS[subject] || subject || '—';
 
     // ── Slack ──────────────────────────────────────────────────────────────
     const slackMsg = {
@@ -73,55 +73,42 @@ export async function onRequestPost(context) {
       blocks: [
         {
           type: 'header',
-          text: { type: 'plain_text', text: '🤿 New HoloDive Waitlist Signup!' }
+          text: { type: 'plain_text', text: '📬 New HoloDive Contact Enquiry' }
         },
         {
           type: 'section',
           fields: [
             { type: 'mrkdwn', text: `*Name:*\n${name || '—'}` },
             { type: 'mrkdwn', text: `*Email:*\n${email || '—'}` },
-            { type: 'mrkdwn', text: `*Phone:*\n${phone || '—'}` },
-            { type: 'mrkdwn', text: `*Diver Type:*\n${DIVER_TYPE_LABELS[diver_type] || diver_type || '—'}` }
+            { type: 'mrkdwn', text: `*Subject:*\n${subjectLabel}` },
+            { type: 'mrkdwn', text: `*Country:*\n${country}` }
           ]
         },
-        ...(excitement ? [{
-          type: 'section',
-          text: { type: 'mrkdwn', text: `*What excites them:*\n_${excitement}_` }
-        }] : []),
         {
           type: 'section',
-          fields: [
-            { type: 'mrkdwn', text: `*IP:*\n${ip}` },
-            { type: 'mrkdwn', text: `*Country:*\n${country}` },
-            { type: 'mrkdwn', text: `*VPN/Threat:*\n${vpn}` },
-            { type: 'mrkdwn', text: `*Time (UTC):*\n${timestamp}` }
-          ]
+          text: { type: 'mrkdwn', text: `*Message:*\n${message || '—'}` }
         },
         {
           type: 'context',
-          elements: [{ type: 'mrkdwn', text: 'Signed up via holodive.io • Added to HubSpot CRM' }]
+          elements: [{
+            type: 'mrkdwn',
+            text: `Sent via holodive.io/contact.html • ${timestamp} • IP: ${ip} • Added to HubSpot CRM`
+          }]
         }
       ]
     };
 
-    // ── Run Slack + HubSpot + Sheets in parallel ───────────────────────────
+    // ── Run Slack + HubSpot in parallel ────────────────────────────────────
     const [slackRes, hubspotResult] = await Promise.all([
       fetch('https://slack.com/api/chat.postMessage', {
         method: 'POST',
         headers: {
           Authorization: `Bearer ${env.SLACK_TOKEN}`,
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
         },
-        body: JSON.stringify(slackMsg)
+        body: JSON.stringify(slackMsg),
       }),
-      pushToHubspot(env, { name, email, phone, diver_type, excitement, source: 'holodive-waitlist' }),
-      env.APPS_SCRIPT_URL
-        ? fetch(env.APPS_SCRIPT_URL, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ timestamp, name, email, phone, diver_type, excitement, ip, country, vpn })
-          }).catch(() => {})
-        : Promise.resolve()
+      pushToHubspot(env, { name, email, subject, message }),
     ]);
 
     const slackBody = await slackRes.json();
@@ -131,14 +118,14 @@ export async function onRequestPost(context) {
     return new Response(JSON.stringify({ success: true }), {
       headers: {
         'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*'
-      }
+        'Access-Control-Allow-Origin': '*',
+      },
     });
   } catch (err) {
-    console.error('signup handler error:', err);
+    console.error('contact handler error:', err);
     return new Response(JSON.stringify({ success: false }), {
       status: 500,
-      headers: { 'Content-Type': 'application/json' }
+      headers: { 'Content-Type': 'application/json' },
     });
   }
 }
@@ -148,7 +135,7 @@ export async function onRequestOptions() {
     headers: {
       'Access-Control-Allow-Origin': '*',
       'Access-Control-Allow-Methods': 'POST, OPTIONS',
-      'Access-Control-Allow-Headers': 'Content-Type'
-    }
+      'Access-Control-Allow-Headers': 'Content-Type',
+    },
   });
 }

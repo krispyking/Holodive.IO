@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About — HoloDive</title>
+  <meta name="description" content="HoloDive is building the world's first real-time AI dive mask to transform underwater exploration.">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --primary: #0066FF; --secondary: #00D4FF;
+      --dark-bg: #0A0E27; --text-light: #FFFFFF;
+      --text-muted: #A0A8C0;
+    }
+    body { font-family: 'Inter', sans-serif; background: var(--dark-bg); color: var(--text-light); line-height: 1.6; }
+    .container { max-width: 800px; margin: 0 auto; padding: 0 60px; }
+    @media (max-width: 768px) { .container { padding: 0 20px; } }
+
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      background: rgba(10, 14, 39, 0.95); backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(255,255,255,0.08); padding: 16px 0;
+    }
+    nav .inner { max-width: 1200px; margin: 0 auto; padding: 0 60px; display: flex; justify-content: space-between; align-items: center; }
+    .nav-logo { font-size: 22px; font-weight: 700; color: var(--text-light); text-decoration: none; letter-spacing: -0.5px; }
+    .nav-logo span { color: var(--secondary); }
+    .nav-back { color: var(--secondary); text-decoration: none; font-size: 14px; font-weight: 600; }
+    .nav-back:hover { text-decoration: underline; }
+
+    main { padding: 120px 0 80px; }
+    .page-label { font-size: 13px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; color: var(--secondary); margin-bottom: 16px; }
+    h1 { font-size: 48px; font-weight: 700; letter-spacing: -1.5px; line-height: 1.1; margin-bottom: 32px; }
+    .lead { font-size: 20px; color: var(--text-muted); margin-bottom: 48px; line-height: 1.7; }
+    h2 { font-size: 24px; font-weight: 700; margin: 48px 0 16px; }
+    p { color: var(--text-muted); margin-bottom: 20px; font-size: 16px; }
+    .cta-link { display: inline-block; margin-top: 32px; background: var(--primary); color: #fff; padding: 14px 32px; border-radius: 10px; text-decoration: none; font-weight: 700; transition: background 0.2s; }
+    .cta-link:hover { background: #0052cc; }
+
+    footer { border-top: 1px solid rgba(255,255,255,0.06); padding: 32px 0; margin-top: 80px; }
+    footer .inner { max-width: 1200px; margin: 0 auto; padding: 0 60px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; }
+    footer p { color: var(--text-muted); font-size: 13px; margin: 0; }
+    .footer-links { display: flex; gap: 24px; }
+    .footer-links a { color: var(--text-muted); text-decoration: none; font-size: 13px; font-weight: 600; }
+    .footer-links a:hover { color: var(--secondary); }
+  </style>
+</head>
+<body>
+  <nav>
+    <div class="inner">
+      <a href="index.html" class="nav-logo">Holo<span>Dive</span></a>
+      <a href="index.html" class="nav-back">← Back to Home</a>
+    </div>
+  </nav>
+
+  <main>
+    <div class="container">
+      <div class="page-label">Company</div>
+      <h1>About HoloDive</h1>
+      <p class="lead">We're building the world's first real-time AI dive mask — combining marine biology, computer vision, and wearable hardware to transform the underwater experience for every diver on the planet.</p>
+
+      <h2>Our Mission</h2>
+      <p>The ocean covers 71% of our planet, yet most of it remains unexplored and poorly understood. Every day, millions of divers swim through one of Earth's richest ecosystems — and return to the surface without knowing what they saw.</p>
+      <p>HoloDive changes that. By overlaying real-time AI intelligence directly into the diver's field of view, we make every dive informed, logged, and connected to global conservation efforts.</p>
+
+      <h2>The Problem We're Solving</h2>
+      <p>Today's dive computers give you depth and air time. They don't tell you that the fish you just saw is a critically endangered humphead wrasse. They don't log the coral bleaching you swam past. They don't connect your dive to the 50,000 researchers tracking reef health worldwide.</p>
+      <p>HoloDive does all of that — automatically, in real time, without taking your eyes off the reef.</p>
+
+      <h2>Where We Are</h2>
+      <p>HoloDive is currently in the pre-launch phase, building our early adopter community. We're accepting early access registrations now at introductory pricing ahead of our first production run.</p>
+
+      <a href="index.html#signup" class="cta-link">Join the Early Access List</a>
+    </div>
+  </main>
+
+  <footer>
+    <div class="inner">
+      <p>© 2026 HoloDive. All rights reserved.</p>
+      <div class="footer-links">
+        <a href="privacy.html">Privacy Policy</a>
+        <a href="terms.html">Terms of Service</a>
+        <a href="contact.html">Contact</a>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>

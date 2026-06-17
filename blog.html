@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Blog — HoloDive</title>
+  <meta name="description" content="Updates, ocean science, and behind-the-scenes from the HoloDive team.">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --primary: #0066FF; --secondary: #00D4FF;
+      --dark-bg: #0A0E27; --text-light: #FFFFFF;
+      --text-muted: #A0A8C0;
+    }
+    body { font-family: 'Inter', sans-serif; background: var(--dark-bg); color: var(--text-light); line-height: 1.6; }
+    .container { max-width: 900px; margin: 0 auto; padding: 0 60px; }
+    @media (max-width: 768px) { .container { padding: 0 20px; } }
+
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      background: rgba(10, 14, 39, 0.95); backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(255,255,255,0.08); padding: 16px 0;
+    }
+    nav .inner { max-width: 1200px; margin: 0 auto; padding: 0 60px; display: flex; justify-content: space-between; align-items: center; }
+    .nav-logo { font-size: 22px; font-weight: 700; color: var(--text-light); text-decoration: none; letter-spacing: -0.5px; }
+    .nav-logo span { color: var(--secondary); }
+    .nav-back { color: var(--secondary); text-decoration: none; font-size: 14px; font-weight: 600; }
+    .nav-back:hover { text-decoration: underline; }
+
+    main { padding: 120px 0 80px; }
+    .page-label { font-size: 13px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; color: var(--secondary); margin-bottom: 16px; }
+    h1 { font-size: 48px; font-weight: 700; letter-spacing: -1.5px; line-height: 1.1; margin-bottom: 16px; }
+    .lead { font-size: 18px; color: var(--text-muted); margin-bottom: 60px; }
+
+    .posts-grid { display: grid; gap: 32px; }
+    .post-card {
+      background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 16px; padding: 32px; transition: border-color 0.2s;
+    }
+    .post-card:hover { border-color: rgba(0,212,255,0.3); }
+    .post-meta { font-size: 12px; color: var(--secondary); font-weight: 600; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 12px; }
+    .post-card h2 { font-size: 22px; font-weight: 700; margin-bottom: 12px; }
+    .post-card p { color: var(--text-muted); font-size: 15px; }
+
+    .coming-soon {
+      text-align: center; padding: 80px 0;
+      color: var(--text-muted);
+    }
+    .coming-soon .icon { font-size: 48px; margin-bottom: 24px; }
+    .coming-soon h2 { font-size: 28px; font-weight: 700; color: var(--text-light); margin-bottom: 12px; }
+    .cta-link { display: inline-block; margin-top: 32px; background: var(--primary); color: #fff; padding: 14px 32px; border-radius: 10px; text-decoration: none; font-weight: 700; transition: background 0.2s; }
+    .cta-link:hover { background: #0052cc; }
+
+    footer { border-top: 1px solid rgba(255,255,255,0.06); padding: 32px 0; margin-top: 80px; }
+    footer .inner { max-width: 1200px; margin: 0 auto; padding: 0 60px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; }
+    footer p { color: var(--text-muted); font-size: 13px; margin: 0; }
+    .footer-links { display: flex; gap: 24px; }
+    .footer-links a { color: var(--text-muted); text-decoration: none; font-size: 13px; font-weight: 600; }
+    .footer-links a:hover { color: var(--secondary); }
+  </style>
+</head>
+<body>
+  <nav>
+    <div class="inner">
+      <a href="index.html" class="nav-logo">Holo<span>Dive</span></a>
+      <a href="index.html" class="nav-back">← Back to Home</a>
+    </div>
+  </nav>
+
+  <main>
+    <div class="container">
+      <div class="page-label">Blog</div>
+      <h1>From the HoloDive Team</h1>
+      <p class="lead">Ocean science, product updates, and behind-the-scenes from the people building the world's first AI dive mask.</p>
+
+      <div class="coming-soon">
+        <div class="icon">🌊</div>
+        <h2>First posts coming soon</h2>
+        <p>We're preparing launch content — deep dives (pun intended) into marine AI, product development, and the science behind HoloDive. Join the waitlist to be notified first.</p>
+        <a href="index.html#signup" class="cta-link">Get Notified</a>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <div class="inner">
+      <p>© 2026 HoloDive. All rights reserved.</p>
+      <div class="footer-links">
+        <a href="privacy.html">Privacy Policy</a>
+        <a href="terms.html">Terms of Service</a>
+        <a href="contact.html">Contact</a>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>
